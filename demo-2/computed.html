@@ -1,0 +1,38 @@
+<html>
+	<head>
+		<title>计算属性</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+
+		<div id="app" >
+			车的价格：<span>{{price}}</span>
+		</div>
+
+		<script type="text/javascript">
+			var app = new Vue({
+				el: "#app",
+				data: {
+					prices: [{
+						price: 100,
+						desc: "车险"
+					}, {
+						price: 2000,
+						desc: "车价格"
+					}]
+				},
+				computed: { 
+					// 当data数据发生变化时，也会导致计算结果发生变化，
+					// 比如在购买货物的时候，就可以因为购买的数量，从而导致金额的变化
+					price: function() {
+						sum = 0;
+						this.prices.forEach(function(v){
+							sum += v.price;
+						});
+						return sum;
+					}
+				}
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,95 @@
+<html>
+	<head>
+		<title>内置指令（第5章）实战（购物车）</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+
+	<body>
+		<div id="app">
+			
+			<template v-if="goods.length > 0"> 
+				<table>
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>商品名称</th>
+							<th>商品单价</th>
+							<th>购买数量</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<template v-for="(good,index) in goods">
+							<tr >
+								<td>{{good.id}}</td>
+								<td>{{good.name}}</td>
+								<td>{{good.price}}</td>
+								<td><button @click="reduceCount(index)">-</button>{{good.count}}<button @click="addCount(index)">+</button></td>
+								<td><button @click="remove(index)">移除</button></td>
+							</tr>
+						</template>
+					</tbody>
+				</table>
+				<div>总价: {{totalPrice}}</div>
+			</template>
+
+		</div>
+		
+		
+	
+	</body>
+
+	<script type="text/javascript">
+			var onceApp = new Vue({
+				el: "#app",
+				data: {
+					goods: [
+						{
+							id: 1,
+							name: 'IPhone5S',
+							price: 6888,
+							count: 1
+						},
+						{
+							id: 2,
+							name: 'IPhone6S',
+							price: 7888,
+							count: 1
+						},
+						{
+							id: 1,
+							name: 'IPhoneX',
+							price: 4888,
+							count: 1
+						}
+					]
+				},
+				methods: {
+					addCount: function(index) {
+						this.goods[index].count += 1;
+					},
+					reduceCount: function(index) {
+						if (this.goods[index].count > 0) {
+							this.goods[index].count -= 1;
+						}
+						
+					},
+					remove: function(index) {
+						this.goods.splice(index, 1);
+					}
+				},
+				computed: {
+					totalPrice: function() {
+						var s = 0;
+						this.goods.forEach(function(good){
+							s += good.price * good.count
+						});
+						return s;
+					}
+				}
+				
+			});
+
+	</script>
+
+</html>

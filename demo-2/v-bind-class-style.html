@@ -1,0 +1,46 @@
+<html>
+	<head>
+		<title>v-bind 修改class,style属性</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		
+		<div id="app">
+			<!-- 动态修改class, isActive=true, class="active" -->
+			<div :class="{'active': isActive}">Bind Class Active</div>
+			<!-- 动态修改class, isActive=true, error=tue class="active error" -->
+			<div :class="{'active': isActive, 'error': error}">Bind Class Active</div>
+			<!-- 与普通的class共存, class="test active error", active=true & error=true-->
+			<div class="test" :class="{'active': isActive, 'error': error}">Bind Class Active</div>
+			<!-- 当class变化比较复杂时，需要计算，那么可以定义成一个计算属性来完成 -->
+			<div :class="classComputed">class computed</div>
+			<!-- 当需要绑定多个时，也可以采用数据方式 -->
+			<div :class="[class1, class2]">Array Class</div>
+			<!-- 也可以使用三元表达式 或者 集合第一种true和false的写法-->
+			<div :class="[class3 ? 'class3': 'class4', class2]">if else Class</div>
+			<div :class="[{'class3': class3}, class2]">if else Class</div>
+
+			<!-- style和class基本一致，可以使用data、computed、methods三种方式都可以实现动态的绑定 -->
+
+		</div>
+
+		<script type="text/javascript">
+			var app = new Vue({
+				el: "#app",
+				data: {
+					isActive: false,
+					error: true,
+					classType: 0,
+					class1: "class1",
+					class2: "class2",
+					class3: false
+				},
+				computed: {
+					classComputed: function() {
+						return this.classType == 1 ? "OK" : "NO";
+					}
+				}
+			});
+		</script>
+	</body>
+</html>

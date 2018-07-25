@@ -1,0 +1,168 @@
+<html>
+	<head>
+		<title>内置指令（第5章）</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+
+	<body>
+		<!-- v-once: 只渲染一次，数据绑定之后，不会发生变化 -->
+		<div id="app">
+			<!-- v-once 标示的元素及其子元素，都不会再渲染 -->
+			<span v-once>{{message}}</span>
+			<input type="text" v-model="message" v-bind:value="message"/>{{message}}
+			
+			<!-- 条件渲染指令 v-if ... v-else-if ....v-else -->
+			<div>
+				Show: <input type="text" v-model="status" :value="status"/>
+				<span v-if="status == 1">==1</span>
+				<span v-else-if="status == 2">==2</span>
+				<span v-else=>==3</span>
+				<!-- 多个元素进行条件旋绕 -->
+				<div>
+					<template v-if="status == 1">
+						<ul>
+							<li>中国</li>
+							<li>法国</li>
+							<li>意大利</li>
+						</ul>
+					</template>
+					<template v-else>
+						<ul>
+							<li>上海</li>
+							<li>南昌</li>
+							<li>杭州</li>
+						</ul>
+					</template>
+				</div>
+
+				<!-- 
+					元素复用，Vue在渲染时，处于效率的考虑，默认尽可能的复用已有的元素而非重新渲染 
+					如果不想复用，增加key属性即可，确保key不一样就可以，这个时候就会重新旋绕元素
+				-->
+				<div>
+					<template v-if="inputType == 'name'">
+						<label>Username:</label>
+						<input type="text" placeholder="请输入用户名" key="name"/>
+					</template>
+					<template v-else>
+						<label>Email:</label>
+						<input type="text" placeholder="请输入邮箱" key="email"/>
+					</template>
+					<button @click="selectInputType" >切换输入类型</button>
+				</div>
+
+				<!-- v-show 和 v-if类似，但是是通过控制display属性 -->
+				<div>
+					<button @click="isShow">是否显示</button> 
+					<span v-show="show">v-show测试</span>
+				</div>
+			</div>
+
+			<!-- v-for 列表渲染 -->
+			<div>
+				<input type="text" v-model="book"/> <button @click="addBook">增加数本</button>
+				<ul>
+					<!-- 可以单独： obj in objs 或者 (obj, index) in objs 取出迭代索引
+						 如果遍历的是单个对象时，(value, key, index) in obj 的得带方式，分别取出对象属性的值、名称和索引 
+						 多每一次遍历多个元素组合是，可以使用template和v-if用法一致
+					-->
+					<li v-for="(b, index) in books">{{index}}-{{b}}</li>
+
+					<!-- 迭代对象 -->
+					<li v-for="(value, key, index) in user">
+						{{index}} - {{key}} - {{value}}
+					</li>
+					<!-- 迭代整数 -->
+					<li v-for="n in 10">{{n}}</li>
+
+					<!-- 如果想排序，或者其他操作，可以使用计算属性来遍历，并且不会改变原数组 -->
+				</ul>
+				<ol>
+					<li v-for="n in nums">{{n}}</li>
+				</ol>
+			</div>
+
+			<!-- 方法和事件 v-on, 可以通过传递$event来访问原生的dom事件
+				add(1, $event) -> event.(调用原生的函数)，也可以使用vue的修饰符来完成
+			-->
+			<div>
+				<button @click="add(1)">+1</button>
+				<button @click="add(10)">+10</button>
+				<button v-on:click="reduce">-1</button>
+				<span v-model="count">{{count}}</span>
+					
+				<!-- 阻止单击事件，无法点击 -->
+				<a @click.stop="handle">stop</a>
+				<!-- 提交事件不再重载页面 -->
+				<form @submit.prevent="handle"></form>
+			</div>
+
+			
+
+		</div>
+		
+		
+	
+	</body>
+
+	<script type="text/javascript">
+			var n = [1,2,3,4,5,6,7]
+			var onceApp = new Vue({
+				el: "#app",
+				data: {
+					message: "Once",
+					status: 2,
+					inputType: 'name',
+					show: true,
+					book: '',
+					books: ["12", "34"],
+					user: {
+						"username": "wangzp",
+						"age": 23,
+						"address": "shanghai"
+					},
+					count: 0
+				},
+				methods: {
+					selectInputType: function() {
+						if (this.inputType == 'name') {
+							this.inputType = 'email';
+						}else {
+							this.inputType = 'name';
+						}
+					},
+					isShow: function() {
+						if (this.show) {
+							this.show = false;
+						}else {
+							this.show = true;
+						}
+					},
+					addBook: function() {
+						if (this.book != '') {
+							this.books.push(this.book);
+						}
+					},
+					add: function(n) {
+						this.count += n;
+					},
+					reduce: function(){
+						this.count -= 1;
+					}
+				},
+				computed: {
+					nums: function() {
+						return n.sort(function(a, b){
+							return a < b;
+						})
+					}
+				}
+			});
+
+			// 元素过滤
+			app.books = app.books.filter(function(item) {
+				return item != '12';
+			});
+	</script>
+
+</html>

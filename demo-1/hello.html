@@ -1,0 +1,66 @@
+<html>
+	<head>
+		<title>Demo 01</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			{{message}}
+			<!-- v-model 指令：用于绑定引用数据 -->
+			<input type="text" id="username" v-model="username"/>
+			
+			<!-- v-html 指令：动态HTML值 -->
+			<span v-html="hint"></span>
+			Username: {{username}} <!-- 数据引用 -->
+			
+			<!-- v-if v-for指令 -->
+			<p v-if="seen">
+				名字列表： <!-- QA: 只能控制：这个文本的显示还是不显示，ul无法控制，具体为啥，以后再说 -->
+				<ul>
+					<li v-for="name in names">{{name}}</li>
+				</ul>
+			</p>
+				
+			<!-- v-on: 绑定事件，使用v-on之后就可以引用Vue对象中的methods方法 -->
+			<input type="button" v-on:click="show" value="show" />
+
+			<!-- v-bind: 绑定数据变量，改变标签属性 -->
+			<a v-bind:href="vue_url" >Vue</a>
+			
+		</div>
+		<script type="text/javascript">
+			var app = new Vue({
+				el: "#app", // 绑定某个标签, 类似于 $("#app")
+				data: {
+					"message": "Username: ",
+					"username": "",
+					"hint": "<font size=3 color=red>6-10任意字符</font>",
+					"names": ["wangzp", "wangzp2", "wangzp3", "wangzp4"],
+					"seen": false,
+					"vue_url": "https://cn.vuejs.org/v2/guide/"
+				},
+				methods: {
+					show: function() {
+						alert(this.username); // 会获取<input type="text" id="username" /> 整个HTML，原因目前不知道
+						alert(this.message); 
+					}
+				},
+				// vue生命周期：created,mounted, beforeDestory
+				created: function(){
+					// 实例创建完调用，但是数据还未挂在，因此无法引用；一般用于初始化数据使用
+					console.log('created');
+				},
+				mounted: function(){
+					// 数据实例已挂在到vue实例上，因此可以使用this.$el或者其他属性引用
+					console.log('mounted' + this.$el);
+				},
+				beforeDestory: function() {
+					// 在实例销毁之前调用，一般用于解绑一些监听事件
+					console.log('before destory');
+				}
+			});
+		</script>
+
+	</body>
+
+</html>
