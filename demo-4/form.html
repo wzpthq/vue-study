@@ -1,0 +1,113 @@
+<html>
+	<head>
+		<title>表单 & v-model</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		
+		<div id="app">
+			<!-- 如果是中文，那么拼音阶段不会输入数据，之后ENter之后才会 -->
+			<input type="text" v-model="message" placeholder="请输入...." />
+			<textarea v-model="message" placeholder="输入...."></textarea>
+			输入的内容：{{message}}
+
+			<!-- 
+				@input 等价于v-model，但是区别在于实时更新，输入拼音也会更新 
+				你会发现，输入中文时，拼音阶段也会输入数据的。
+			-->
+			<br/>
+			<input type="text" @input="handleInput" placeholder="@input"/>
+
+			<!-- 单选 -->
+			<!-- 结果是我们只能通过绑定属性，控制一个radio，如果我们想通过数据来绑定Radio的选择就需要v-model和value的配合使用 -->
+			<br />
+			<input type="radio" name="test" :checked="selected" /><label>Radio1</label>
+			<input type="radio" name="test" /><label>Radio2</label>
+			<input type="radio" name="test" /><label>Radio3</label>
+			<br/>
+			<!-- 数据绑定的值与value属性值一致时就是匹配 -->
+			<input type="radio" name="game" v-model="picked" value="1"/><label>王者荣耀</label>
+			<input type="radio" name="game" v-model="picked" value="2"/><label>汉武大帝</label>
+			<input type="radio" name="game" v-model="picked" value="3"/><label>死神</label>
+			您选择的是：{{picked}}
+
+			<!-- 多选: 同样也是v-model和value的组合使用，但是和radio不同的是，v-model绑定的是一个Array -->
+			<br />
+			<input type="checkbox" v-model="checked" />
+			<label>选择状态: {{checked}}</label>
+			<br/>
+			<input type="checkbox" v-model="lang" name="lang" value="English"/>
+			<label>英国</label>
+			<input type="checkbox" v-model="lang" name="lang" value="China"/>
+			<label>中国</label>
+			<input type="checkbox" v-model="lang" name="lang" value="Japen"/>
+			<label>日本</label>
+			您选择的是：{{lang}}
+
+			<!-- 下拉列表 分为：单选下拉和多选下拉，通过multiple属性控制
+				注意model和value的匹配原则，先优先匹配option value值，如果没有value值，会匹配option的内部content
+
+				select虽然可以完成下拉操作，但是不常用，因为不同的浏览器不同，很难统一，因此不大美观。一般都是使用div模拟实现下拉
+			-->
+			<br />
+			<select v-model="singleSelect">
+				<option>China</option>
+				<option value="English">英国</option>
+				<option>美国</option>
+			</select>
+			<p> 您选择的是：{{singleSelect}} </p>
+			
+			<select v-model="multiSelect" multiple>
+				<option value="China">中国</option>
+				<option value="English">英国</option>
+				<option value="USA">美国</option>
+			</select>
+			<p> 您选择的是：{{multiSelect}} </p>
+
+			<!-- 控件通过v-bind动态绑定value值，本质上选择匹配就是v-model=value，因此
+				无论是复选框还是下拉列表又或者是单选框都是尊选这个原则，
+			-->
+			<input type="radio" v-model="radioSelected" :value="radioValue"/>
+			<label>{{radioSelected}} - {{radioValue}}</label>
+
+			<br />
+			<!-- 修饰符 -->
+			<!-- lazy 之后会变成change事件，然后在失焦或者输入Enter键才会变化-->
+			Lazy: <input type="text" v-model.lazy="lazy" /> {{lazy}} <br />
+			<!-- number: 如果单纯的type=number，输入的虽然是数字，但是实际上是字符串，如果加上number，
+				那么数据字符串就会转换成数值类型
+			 -->
+			Number: <input type="number" v-model.number="num" /> {{num}} <br/>
+			Trim: <input type="text" v-model.trim="string" /> {{string}} <br/>
+
+		</div>
+
+		<script type="text/javascript">
+			var app = new Vue({
+				el: "#app",
+				data: {
+					message: '',
+					selected: true,
+					picked: "1",
+					checked: false,
+					lang: ["English", "China"],
+					singleSelect: "China",
+					multiSelect: ["China", "English"],
+					radioSelected: true,
+					radioValue: 1,
+					lazy: '',
+					num: null,
+					string: "1212         "
+
+				},
+				methods: {
+					// e: 表示目标元素
+					handleInput: function(e){
+						this.message = e.target.value;
+					}
+				}
+				
+			});
+		</script>
+	</body>
+</html>
